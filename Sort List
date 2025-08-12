@@ -1,0 +1,52 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public static ListNode getMid(ListNode head) {
+        ListNode slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow; // mid - (last node of 1st part)
+    }
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        return mergeSort(head);
+    }
+    public static ListNode mergeSort(ListNode curr) {
+        if (curr.next == null || curr == null) {
+            return curr;
+        }
+        ListNode middle = getMid(curr);
+        ListNode rightHead = middle.next;
+        middle.next = null; // break the link
+        ListNode left = mergeSort(curr); // breaking left part 
+        ListNode right = mergeSort(rightHead); // breaking right part
+        return merging(left, right);
+    }
+    public static ListNode merging(ListNode leftH, ListNode rightH) {
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+        while (leftH != null && rightH != null) {
+            if (leftH.val < rightH.val) {
+                temp.next = leftH;
+                leftH = leftH.next;
+            } else {
+                temp.next = rightH;
+                rightH = rightH.next;
+            }
+            temp = temp.next;
+        }
+        if (leftH != null) temp.next = leftH;
+        if (rightH != null) temp.next = rightH;
+        return dummy.next;
+    }
+}
